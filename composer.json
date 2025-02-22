@@ -12,8 +12,8 @@
         "laravel/framework": "^8.75",
         "laravel/passport": "*",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5",
-        "robsontenorio/laravel-keycloak-guard": "*"
+        "laravel/tinker": "^2.10",
+        "robsontenorio/laravel-keycloak-guard": "^1.6"
     },
     
     "require-dev": {
