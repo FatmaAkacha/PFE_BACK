@@ -51,15 +51,37 @@ class ClientController extends Controller
             'email' => 'required|string|email|max:255|unique:clients',
             'adresse' => 'nullable|string|max:255',
             'numero_telephone' => 'nullable|string|max:15',
-            'logo' => 'nullable|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+    
+            // Déboguer : afficher des informations sur le fichier
+            \Log::info("Logo file name: " . $logo->getClientOriginalName());
+            \Log::info("Logo file path: " . $logo->getPathname());
+    
+            // Sauvegarder le fichier dans le répertoire public/images
+            $imagePath = $logo->store('images', 'public');
+            
+            // Déboguer : vérifier le chemin de l'image
+            \Log::info("Image path: " . $imagePath);
+    
+            // Générer l'URL publique
+            $imageUrl = Storage::url($imagePath);
+    
+            // Déboguer : vérifier l'URL générée
+            \Log::info("Image URL: " . $imageUrl);
+        } else {
+            // Si pas de fichier, utiliser null pour l'URL
+            $imageUrl = null;
+        }
 
         $client = new Client();
         $client->nom = $request->nom;
         $client->email = $request->email;
         $client->adresse = $request->adresse;
         $client->numero_telephone = $request->numero_telephone;
-        $client->logo = $request->logo;
+        $client->logo = $imageUrl;        
         $client->save();
 
         return redirect()->route('Clients.index')->with('success', 'Client created successfully.');
