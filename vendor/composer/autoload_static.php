@@ -85,6 +85,9 @@ class ComposerStaticInit3b188cb2f46ea1aef9822a93b0f97121
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
+            'Spatie\\Multitenancy\\Database\\Factories\\' => 39,
+            'Spatie\\Multitenancy\\' => 20,
+            'Spatie\\LaravelPackageTools\\' => 27,
         ),
         'R' => 
         array (
@@ -137,6 +140,7 @@ class ComposerStaticInit3b188cb2f46ea1aef9822a93b0f97121
             'Laravel\\Sail\\' => 13,
             'Laravel\\Passport\\Database\\Factories\\' => 36,
             'Laravel\\Passport\\' => 17,
+            'Laravel\\Breeze\\' => 15,
         ),
         'K' => 
         array (
@@ -326,6 +330,18 @@ class ComposerStaticInit3b188cb2f46ea1aef9822a93b0f97121
         array (
             0 => __DIR__ . '/..' . '/symfony/psr-http-message-bridge',
         ),
+        'Spatie\\Multitenancy\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-multitenancy/database/factories',
+        ),
+        'Spatie\\Multitenancy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src',
+        ),
+        'Spatie\\LaravelPackageTools\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-package-tools/src',
+        ),
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -463,6 +479,10 @@ class ComposerStaticInit3b188cb2f46ea1aef9822a93b0f97121
         'Laravel\\Passport\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/passport/src',
+        ),
+        'Laravel\\Breeze\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel/breeze/src',
         ),
         'KeycloakGuard\\' => 
         array (
@@ -3137,6 +3157,11 @@ class ComposerStaticInit3b188cb2f46ea1aef9822a93b0f97121
         'KeycloakGuard\\KeycloakGuard' => __DIR__ . '/..' . '/robsontenorio/laravel-keycloak-guard/src/KeycloakGuard.php',
         'KeycloakGuard\\KeycloakGuardServiceProvider' => __DIR__ . '/..' . '/robsontenorio/laravel-keycloak-guard/src/KeycloakGuardServiceProvider.php',
         'KeycloakGuard\\Token' => __DIR__ . '/..' . '/robsontenorio/laravel-keycloak-guard/src/Token.php',
+        'Laravel\\Breeze\\BreezeServiceProvider' => __DIR__ . '/..' . '/laravel/breeze/src/BreezeServiceProvider.php',
+        'Laravel\\Breeze\\Console\\InstallCommand' => __DIR__ . '/..' . '/laravel/breeze/src/Console/InstallCommand.php',
+        'Laravel\\Breeze\\Console\\InstallsApiStack' => __DIR__ . '/..' . '/laravel/breeze/src/Console/InstallsApiStack.php',
+        'Laravel\\Breeze\\Console\\InstallsBladeStack' => __DIR__ . '/..' . '/laravel/breeze/src/Console/InstallsBladeStack.php',
+        'Laravel\\Breeze\\Console\\InstallsInertiaStacks' => __DIR__ . '/..' . '/laravel/breeze/src/Console/InstallsInertiaStacks.php',
         'Laravel\\Passport\\ApiTokenCookieFactory' => __DIR__ . '/..' . '/laravel/passport/src/ApiTokenCookieFactory.php',
         'Laravel\\Passport\\AuthCode' => __DIR__ . '/..' . '/laravel/passport/src/AuthCode.php',
         'Laravel\\Passport\\Bridge\\AccessToken' => __DIR__ . '/..' . '/laravel/passport/src/Bridge/AccessToken.php',
@@ -5453,6 +5478,48 @@ class ComposerStaticInit3b188cb2f46ea1aef9822a93b0f97121
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Spatie\\LaravelPackageTools\\Exceptions\\InvalidPackage' => __DIR__ . '/..' . '/spatie/laravel-package-tools/src/Exceptions/InvalidPackage.php',
+        'Spatie\\LaravelPackageTools\\Package' => __DIR__ . '/..' . '/spatie/laravel-package-tools/src/Package.php',
+        'Spatie\\LaravelPackageTools\\PackageServiceProvider' => __DIR__ . '/..' . '/spatie/laravel-package-tools/src/PackageServiceProvider.php',
+        'Spatie\\Multitenancy\\Actions\\ForgetCurrentTenantAction' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Actions/ForgetCurrentTenantAction.php',
+        'Spatie\\Multitenancy\\Actions\\MakeQueueTenantAwareAction' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Actions/MakeQueueTenantAwareAction.php',
+        'Spatie\\Multitenancy\\Actions\\MakeTenantCurrentAction' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Actions/MakeTenantCurrentAction.php',
+        'Spatie\\Multitenancy\\Actions\\MigrateTenantAction' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Actions/MigrateTenantAction.php',
+        'Spatie\\Multitenancy\\Commands\\Concerns\\TenantAware' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Commands/Concerns/TenantAware.php',
+        'Spatie\\Multitenancy\\Commands\\TenantsArtisanCommand' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Commands/TenantsArtisanCommand.php',
+        'Spatie\\Multitenancy\\Concerns\\BindAsCurrentTenant' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Concerns/BindAsCurrentTenant.php',
+        'Spatie\\Multitenancy\\Concerns\\UsesMultitenancyConfig' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Concerns/UsesMultitenancyConfig.php',
+        'Spatie\\Multitenancy\\Database\\Factories\\TenantFactory' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/database/factories/TenantFactory.php',
+        'Spatie\\Multitenancy\\Database\\Factories\\TenantNotifiableFactory' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/database/factories/TenantNotifiableFactory.php',
+        'Spatie\\Multitenancy\\Database\\Factories\\UserFactory' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/database/factories/UserFactory.php',
+        'Spatie\\Multitenancy\\Events\\ForgettingCurrentTenantEvent' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Events/ForgettingCurrentTenantEvent.php',
+        'Spatie\\Multitenancy\\Events\\ForgotCurrentTenantEvent' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Events/ForgotCurrentTenantEvent.php',
+        'Spatie\\Multitenancy\\Events\\MadeTenantCurrentEvent' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Events/MadeTenantCurrentEvent.php',
+        'Spatie\\Multitenancy\\Events\\MakingTenantCurrentEvent' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Events/MakingTenantCurrentEvent.php',
+        'Spatie\\Multitenancy\\Events\\TenantNotFoundForRequestEvent' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Events/TenantNotFoundForRequestEvent.php',
+        'Spatie\\Multitenancy\\Exceptions\\CurrentTenantCouldNotBeDeterminedInTenantAwareJob' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Exceptions/CurrentTenantCouldNotBeDeterminedInTenantAwareJob.php',
+        'Spatie\\Multitenancy\\Exceptions\\InvalidConfiguration' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Exceptions/InvalidConfiguration.php',
+        'Spatie\\Multitenancy\\Exceptions\\NoCurrentTenant' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Exceptions/NoCurrentTenant.php',
+        'Spatie\\Multitenancy\\Exceptions\\TaskCannotBeExecuted' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Exceptions/TaskCannotBeExecuted.php',
+        'Spatie\\Multitenancy\\Http\\Middleware\\EnsureValidTenantSession' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Http/Middleware/EnsureValidTenantSession.php',
+        'Spatie\\Multitenancy\\Http\\Middleware\\NeedsTenant' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Http/Middleware/NeedsTenant.php',
+        'Spatie\\Multitenancy\\Jobs\\NotTenantAware' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Jobs/NotTenantAware.php',
+        'Spatie\\Multitenancy\\Jobs\\TenantAware' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Jobs/TenantAware.php',
+        'Spatie\\Multitenancy\\Landlord' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Landlord.php',
+        'Spatie\\Multitenancy\\Models\\Concerns\\UsesLandlordConnection' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Models/Concerns/UsesLandlordConnection.php',
+        'Spatie\\Multitenancy\\Models\\Concerns\\UsesTenantConnection' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Models/Concerns/UsesTenantConnection.php',
+        'Spatie\\Multitenancy\\Models\\Concerns\\UsesTenantModel' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Models/Concerns/UsesTenantModel.php',
+        'Spatie\\Multitenancy\\Models\\Tenant' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Models/Tenant.php',
+        'Spatie\\Multitenancy\\Multitenancy' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Multitenancy.php',
+        'Spatie\\Multitenancy\\MultitenancyServiceProvider' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/MultitenancyServiceProvider.php',
+        'Spatie\\Multitenancy\\Tasks\\PrefixCacheTask' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Tasks/PrefixCacheTask.php',
+        'Spatie\\Multitenancy\\Tasks\\SwitchRouteCacheTask' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Tasks/SwitchRouteCacheTask.php',
+        'Spatie\\Multitenancy\\Tasks\\SwitchTenantDatabaseTask' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Tasks/SwitchTenantDatabaseTask.php',
+        'Spatie\\Multitenancy\\Tasks\\SwitchTenantTask' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Tasks/SwitchTenantTask.php',
+        'Spatie\\Multitenancy\\Tasks\\TasksCollection' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/Tasks/TasksCollection.php',
+        'Spatie\\Multitenancy\\TenantCollection' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/TenantCollection.php',
+        'Spatie\\Multitenancy\\TenantFinder\\DomainTenantFinder' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/TenantFinder/DomainTenantFinder.php',
+        'Spatie\\Multitenancy\\TenantFinder\\TenantFinder' => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src/TenantFinder/TenantFinder.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Symfony\\Bridge\\PsrHttpMessage\\ArgumentValueResolver\\PsrServerRequestResolver' => __DIR__ . '/..' . '/symfony/psr-http-message-bridge/ArgumentValueResolver/PsrServerRequestResolver.php',
         'Symfony\\Bridge\\PsrHttpMessage\\ArgumentValueResolver\\ValueResolverInterface' => __DIR__ . '/..' . '/symfony/psr-http-message-bridge/ArgumentValueResolver/ValueResolverInterface.php',

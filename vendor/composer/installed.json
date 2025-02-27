@@ -1847,6 +1847,66 @@
             "install-path": "../hamcrest/hamcrest-php"
         },
         {
+            "name": "laravel/breeze",
+            "version": "v1.10.0",
+            "version_normalized": "1.10.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/breeze.git",
+                "reference": "e98e855ab4bde5bf0083c4a4d73c0f5b474241ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/breeze/zipball/e98e855ab4bde5bf0083c4a4d73c0f5b474241ae",
+                "reference": "e98e855ab4bde5bf0083c4a4d73c0f5b474241ae",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "^8.42|^9.0",
+                "illuminate/support": "^8.42|^9.0",
+                "illuminate/validation": "^8.42|^9.0",
+                "php": "^7.3|^8.0"
+            },
+            "time": "2022-06-28T11:52:06+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Breeze\\BreezeServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Breeze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
+            "keywords": [
+                "auth",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/breeze/issues",
+                "source": "https://github.com/laravel/breeze"
+            },
+            "install-path": "../laravel/breeze"
+        },
+        {
             "name": "laravel/framework",
             "version": "v8.83.29",
             "version_normalized": "8.83.29.0",
@@ -6764,6 +6824,151 @@
             "install-path": "../sebastian/version"
         },
         {
+            "name": "spatie/laravel-multitenancy",
+            "version": "3.1.1",
+            "version_normalized": "3.1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-multitenancy.git",
+                "reference": "2d9550fcfa77bc9a45b01a37adb9a5bc98df570e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-multitenancy/zipball/2d9550fcfa77bc9a45b01a37adb9a5bc98df570e",
+                "reference": "2d9550fcfa77bc9a45b01a37adb9a5bc98df570e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.0|^9.0|^10.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.9"
+            },
+            "require-dev": {
+                "laravel/legacy-factories": "^1.0.4",
+                "laravel/octane": "^1.0",
+                "laravel/serializable-closure": "^1.1",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^6.23|^7.0|^8.0",
+                "pestphp/pest": "^1.22",
+                "phpunit/phpunit": "^9.4",
+                "spatie/valuestore": "^1.2"
+            },
+            "time": "2024-01-09T10:22:30+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Multitenancy": "Spatie\\Multitenancy\\MultitenancyFacade"
+                    },
+                    "providers": [
+                        "Spatie\\Multitenancy\\MultitenancyServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Multitenancy\\": "src",
+                    "Spatie\\Multitenancy\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "http://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Make your Laravel app usable by multiple tenants",
+            "homepage": "https://github.com/spatie/laravel-multitenancy",
+            "keywords": [
+                "laravel-multitenancy",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-multitenancy/issues",
+                "source": "https://github.com/spatie/laravel-multitenancy/tree/3.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../spatie/laravel-multitenancy"
+        },
+        {
+            "name": "spatie/laravel-package-tools",
+            "version": "1.12.1",
+            "version_normalized": "1.12.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-package-tools.git",
+                "reference": "09f80fa240d44fafb1c70657c74ee44ffa929357"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/09f80fa240d44fafb1c70657c74ee44ffa929357",
+                "reference": "09f80fa240d44fafb1c70657c74ee44ffa929357",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^7.0|^8.0|^9.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^5.0|^6.23|^7.0",
+                "phpunit/phpunit": "^9.4",
+                "spatie/test-time": "^1.2"
+            },
+            "time": "2022-06-28T14:29:26+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelPackageTools\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tools for creating Laravel packages",
+            "homepage": "https://github.com/spatie/laravel-package-tools",
+            "keywords": [
+                "laravel-package-tools",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-package-tools/issues",
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.12.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../spatie/laravel-package-tools"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v6.3.0",
             "version_normalized": "6.3.0.0",
@@ -9445,6 +9650,7 @@
         "fakerphp/faker",
         "filp/whoops",
         "hamcrest/hamcrest-php",
+        "laravel/breeze",
         "laravel/sail",
         "mockery/mockery",
         "myclabs/deep-copy",

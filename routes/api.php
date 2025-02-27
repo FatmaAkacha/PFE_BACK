@@ -34,7 +34,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('/fournisseurs/{id}', [FournisseurController::class, 'update']);
     Route::delete('/fournisseurs/{id}', [FournisseurController::class, 'destroy']);
 
-    // Routes Produits
+    // Routes ProduitController
 
     Route::get('/produits', [ProduitController::class, 'index']); // Afficher tous les produits
     Route::get('/produits/{id}', [ProduitController::class, 'show']); // Afficher un produit spécifique
