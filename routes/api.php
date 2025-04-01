@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\DevisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/produits', [ProduitController::class, 'store']); // Créer un nouveau produit
     Route::put('/produits/{id}', [ProduitController::class, 'update']); // Mettre à jour un produit
     Route::delete('/produits/{id}', [ProduitController::class, 'destroy']); // Supprimer un produit
+
+    Route::get('/devis', [DevisController::class, 'index']);
+    Route::get('/devis/{id}', [DevisController::class, 'show']);
+    Route::post('/devis', [DevisController::class, 'store']);
+    Route::put('/devis/{id}', [DevisController::class, 'update']);
+    Route::delete('/devis/{id}', [DevisController::class, 'destroy']);
 });

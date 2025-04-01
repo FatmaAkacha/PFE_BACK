@@ -51,39 +51,21 @@ class ClientController extends Controller
             'email' => 'required|string|email|max:255|unique:clients',
             'adresse' => 'nullable|string|max:255',
             'numero_telephone' => 'nullable|string|max:15',
+            'raison_sociale' => 'nullable|string|max:255', // Ajouté
+            'contact' => 'nullable|string|max:255', // Ajouté
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
-    
-            // Déboguer : afficher des informations sur le fichier
-            \Log::info("Logo file name: " . $logo->getClientOriginalName());
-            \Log::info("Logo file path: " . $logo->getPathname());
-    
-            // Sauvegarder le fichier dans le répertoire public/images
-            $imagePath = $logo->store('images', 'public');
-            
-            // Déboguer : vérifier le chemin de l'image
-            \Log::info("Image path: " . $imagePath);
-    
-            // Générer l'URL publique
-            $imageUrl = Storage::url($imagePath);
-    
-            // Déboguer : vérifier l'URL générée
-            \Log::info("Image URL: " . $imageUrl);
-        } else {
-            // Si pas de fichier, utiliser null pour l'URL
-            $imageUrl = null;
-        }
+            ]);
+            $logoPath = $request->file('logo') ? $request->file('logo')->store('clients', 'public') : null;
 
         $client = new Client();
         $client->nom = $request->nom;
         $client->email = $request->email;
         $client->adresse = $request->adresse;
         $client->numero_telephone = $request->numero_telephone;
-        $client->logo = $imageUrl;        
+        $client->raison_sociale = $request->raison_sociale; // Ajouté
+        $client->contact = $request->contact; // Ajouté
+        $client->logo = $request->logo;
         $client->save();
-
         return redirect()->route('Clients.index')->with('success', 'Client created successfully.');
     }
 
@@ -102,18 +84,23 @@ class ClientController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:clients,email,' . $client->id,
+            'email' => 'required|string|email|max:255|unique:clients,email,' . $Client->id,
             'adresse' => 'nullable|string|max:255',
             'numero_telephone' => 'nullable|string|max:15',
+            'raison_sociale' => 'nullable|string|max:255', // Ajouté
+            'contact' => 'nullable|string|max:255', // Ajouté
             'logo' => 'nullable|string|max:255',
         ]);
 
-        $client->nom = $request->nom;
-        $client->email = $request->email;
-        $client->adresse = $request->adresse;
-        $client->numero_telephone = $request->numero_telephone;
-        $client->logo = $request->logo;
-        $client->save();
+        $Client->update([
+            'nom' => $request->nom,
+            'email' => $request->email,
+            'adresse' => $request->adresse,
+            'numero_telephone' => $request->numero_telephone,
+            'raison_sociale' => $request->raison_sociale, // Ajouté
+            'contact' => $request->contact, // Ajouté
+            'logo' => $request->logo,
+        ]);
 
         return redirect()->route('Clients.index')->with('success', 'Client updated successfully.');
     }
