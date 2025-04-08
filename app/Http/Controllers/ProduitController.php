@@ -37,7 +37,12 @@ class ProduitController extends Controller
             'prix' => 'required|integer',
             'quantitystock' => 'required|integer',
             'seuil' => 'required|integer',
+            'image' => 'nullable|string',
+            'category' => 'nullable|string',
+            'inventoryStatus' => 'nullable|string',
+            'rating' => 'nullable|numeric'
         ]);
+        
 
         $produit = Produit::create($request->all()); // Crée un nouveau produit
 
@@ -59,7 +64,12 @@ class ProduitController extends Controller
             'prix' => 'required|integer',
             'quantitystock' => 'required|integer',
             'seuil' => 'required|integer',
+            'image' => 'nullable|string',
+            'category' => 'nullable|string',
+            'inventoryStatus' => 'nullable|string',
+            'rating' => 'nullable|numeric'
         ]);
+        
 
         $produit->update($request->all()); // Met à jour le produit
 

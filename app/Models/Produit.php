@@ -7,8 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Produit extends Model
 {
-    protected $fillable = ['nom','description','prix','quantitystock','seuil'];
-    
+    use HasFactory;
+
+    protected $fillable = [
+        'nom',
+        'description',
+        'prix',
+        'quantitystock',
+        'seuil',
+        'image',
+        'category',
+        'inventoryStatus',
+        'rating',
+    ];
+
     public function clients()
     {
         return $this->belongsToMany(Client::class, 'client_produit')

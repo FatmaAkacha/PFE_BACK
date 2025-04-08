@@ -6,6 +6,10 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\DevisController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentClassController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +52,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/devis', [DevisController::class, 'store']);
     Route::put('/devis/{id}', [DevisController::class, 'update']);
     Route::delete('/devis/{id}', [DevisController::class, 'destroy']);
+
+    Route::apiResource('/documents', DocumentController::class);
+    Route::apiResource('/document-classes', DocumentClassController::class);
+
 });
