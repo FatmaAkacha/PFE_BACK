@@ -46,7 +46,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/produits', [ProduitController::class, 'store']); // Créer un nouveau produit
     Route::put('/produits/{id}', [ProduitController::class, 'update']); // Mettre à jour un produit
     Route::delete('/produits/{id}', [ProduitController::class, 'destroy']); // Supprimer un produit
+    Route::get('/produits/{id}/image', [ProduitController::class, 'getImage']);
+    Route::get('/produits/{id}/image', [ProduitController::class, 'serveImage']);
 
+    
     Route::get('/devis', [DevisController::class, 'index']);
     Route::get('/devis/{id}', [DevisController::class, 'show']);
     Route::post('/devis', [DevisController::class, 'store']);
@@ -55,5 +58,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::apiResource('/documents', DocumentController::class);
     Route::apiResource('/document-classes', DocumentClassController::class);
+
+    Route::get('/devis/{id}/download-pdf', [DevisController::class, 'downloadPDF']);
 
 });

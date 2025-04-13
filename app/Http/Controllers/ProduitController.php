@@ -4,89 +4,138 @@ namespace App\Http\Controllers;
 
 use App\Models\Produit;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-
 
 class ProduitController extends Controller
 {
-    // Afficher tous les produits
     public function index()
     {
-        $produits = Produit::all(); // Récupère tous les produits
-        return response()->json($produits); // Retourne les produits au format JSON
+        $produits = Produit::all();
+    
+        foreach ($produits as $produit) {
+            if (!mb_check_encoding($produit->image_data, 'UTF-8')) {
+                $produit->image_data = utf8_encode($produit->image_data);
+            }
+        }
+    
+        return response()->json($produits);
     }
+    
 
-    // Afficher un produit spécifique
     public function show($id)
     {
-        $produit = Produit::find($id); // Récupère un produit par son ID
-
+        $produit = Produit::find($id);
         if (!$produit) {
             return response()->json(['message' => 'Produit non trouvé'], 404);
         }
-
-        return response()->json($produit); // Retourne le produit spécifique
+        
+        if (!mb_check_encoding($produit->image_data, 'UTF-8')) {
+            $produit->image_data = utf8_encode($produit->image_data);
+        }
+        
+        return response()->json($produit);
+        
     }
 
-    // Créer un nouveau produit
     public function store(Request $request)
     {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'description' => 'required|string',
-            'prix' => 'required|integer',
-            'quantitystock' => 'required|integer',
-            'seuil' => 'required|integer',
-            'image' => 'nullable|string',
-            'category' => 'nullable|string',
-            'inventoryStatus' => 'nullable|string',
-            'rating' => 'nullable|numeric'
+        $validatedData = $request->validate([
+            'nom'            => 'required|string|max:255',
+            'description'    => 'required|string',
+            'prix'           => 'required|numeric',
+            'quantitystock'  => 'required|integer',
+            'seuil'          => 'required|integer',
+            'image_data'     => 'nullable|file|image|max:2048',
+            'category'       => 'nullable|string',
+            'inventoryStatus'=> 'nullable|string',
+            'rating'         => 'nullable|numeric',
         ]);
+
+        $data = $validatedData;
+        if ($request->hasFile('image_data')) {
+            $file = $request->file('image_data');
+            // Stocke l'image dans le dossier 'uploads' du disk 'public'
+            $path = $file->store('uploads', 'public');
+            $data['image_data'] = $path; // juste le chemin
+
+        }
         
 
-        $produit = Produit::create($request->all()); // Crée un nouveau produit
-
-        return response()->json($produit, 201); // Retourne le produit créé avec un code 201 (créé)
+        $produit = Produit::create($data);
+        return response()->json($produit, 201);
     }
 
-    // Mettre à jour un produit existant
     public function update(Request $request, $id)
     {
         $produit = Produit::find($id);
-
         if (!$produit) {
             return response()->json(['message' => 'Produit non trouvé'], 404);
         }
 
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'description' => 'required|string',
-            'prix' => 'required|integer',
-            'quantitystock' => 'required|integer',
-            'seuil' => 'required|integer',
-            'image' => 'nullable|string',
-            'category' => 'nullable|string',
-            'inventoryStatus' => 'nullable|string',
-            'rating' => 'nullable|numeric'
+        $validatedData = $request->validate([
+            'nom'            => 'required|string|max:255',
+            'description'    => 'required|string',
+            'prix'           => 'required|numeric',
+            'quantitystock'  => 'required|integer',
+            'seuil'          => 'required|integer',
+            'image_data'     => 'nullable|file|image|max:2048',
+            'category'       => 'nullable|string',
+            'inventoryStatus'=> 'nullable|string',
+            'rating'         => 'nullable|numeric',
         ]);
+
+        $data = $validatedData;
+
+        if ($request->hasFile('image_data')) {
+            $file = $request->file('image_data');
+            // Stocke l'image dans le dossier 'uploads' du disk 'public'
+            $path = $file->store('uploads', 'public');
+            $data['image_data'] = $path; // juste le chemin
+
+        }
         
 
-        $produit->update($request->all()); // Met à jour le produit
-
-        return response()->json($produit); // Retourne le produit mis à jour
+        $produit->update($data);
+        return response()->json($produit);
     }
 
-    // Supprimer un produit
-    public function destroy($id)
+    public function destroy($id) {
+        $produit = Produit::findOrFail($id);
+        
+        $imageData = storage_path('app/public/' . $produit->image_data);
+        if (file_exists($imageData)) {
+            unlink($imageData);  // supprimer l'image
+        }
+    
+        $produit->delete();
+    
+        return response()->json(['message' => 'Produit supprimé avec succès.'], 200);
+    }
+    
+
+    public function getImage($id) {
+        $produit = Produit::findOrFail($id);
+        $path = storage_path('app/public/' . $produit->image_data);
+        if (!file_exists($path)) {
+            return response()->json(['message' => 'Image not found.'], 404);
+        }
+        return response()->file($path);
+    }
+    
+
+    public function serveImage($id)
     {
         $produit = Produit::find($id);
-
-        if (!$produit) {
-            return response()->json(['message' => 'Produit non trouvé'], 404);
+        if (!$produit || !$produit->image_data) {
+            return response()->json(['message' => 'Image non trouvée'], 404);
         }
-
-        $produit->delete(); // Supprime le produit
-
-        return response()->json(['message' => 'Produit supprimé avec succès'], 200); // Message de succès
+    
+        // Le chemin complet du fichier
+        $path = storage_path('app/public/' . $produit->image_data);
+        if (!file_exists($path)) {
+            return response()->json(['message' => 'Image non trouvée'], 404);
+        }
+    
+        return response()->file($path);
     }
+    
 }

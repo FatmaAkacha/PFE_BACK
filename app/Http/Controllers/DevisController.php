@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Devis;
 use App\Models\DevisProduit;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\View;
 
 class DevisController extends Controller
 {
@@ -72,4 +74,19 @@ class DevisController extends Controller
         $devis->delete();
         return response()->json(['message' => 'Devis supprimé']);
     }
+    public function downloadPDF($id)
+{
+    $devis = Devis::with('client', 'devisProduits.produit')->find($id);
+
+    if (!$devis) {
+        return response()->json(['message' => 'Devis introuvable'], 404);
+    }
+
+    // Générer le PDF à partir d'une vue Blade
+    $pdf = Pdf::loadView('pdf.devis', ['devis' => $devis]);
+
+    // Télécharger directement
+    return $pdf->download("bon_de_commande_{$devis->id}.pdf");
+}
+    
 }

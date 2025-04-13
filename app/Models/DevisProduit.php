@@ -20,4 +20,17 @@ class DevisProduit extends Model
     {
         return $this->belongsTo(Produit::class);
     }
+    public function download($id)
+    {
+        $devis = Devis::with('client', 'devisProduits.produit')->find($id);
+
+        if (!$devis) {
+            return response()->json(['message' => 'Devis introuvable'], 404);
+        }
+
+        $pdf = Pdf::loadView('devis.pdf', ['devis' => $devis]);
+
+        return $pdf->download('devis_'.$devis->id.'.pdf');
+    }
+
 }

@@ -15,7 +15,7 @@ class Produit extends Model
         'prix',
         'quantitystock',
         'seuil',
-        'image',
+        'image_data',
         'category',
         'inventoryStatus',
         'rating',
