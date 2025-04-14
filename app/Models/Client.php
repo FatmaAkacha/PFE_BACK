@@ -10,15 +10,8 @@ use Illuminate\Support\Str;
 class Client extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'id',
-        'nom',
-        'adresse',
-        'numero_telephone',
-        'logo',
-        'email','code' , 'raison_sociale', 'contact'
-    ];
-
+    protected $table = 'clients';
+    protected $fillable = ['nom', 'email', 'adresse', 'numero_telephone', 'raison_sociale', 'contact', 'code', 'logo'];
     public $incrementing = false;
     protected $keyType = 'string';
 

@@ -1,118 +1,158 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Client;
 
 class ClientController extends Controller
 {
-    public function getClients()
-    {
-        return response()->json(Client::all(), 200);
+    public function index()
+{
+    try {
+        $clients = Client::all();
+        foreach ($clients as $client) {
+            if (!mb_check_encoding($client->logo, 'UTF-8')) {
+                $client->logo = utf8_encode($client->logo);
+            }
+        }                
+        return response()->json($clients);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la récupération des clients : ' . $e->getMessage());
+        return response()->json(['message' => 'Erreur interne du serveur'], 500);
     }
+}
 
-    public function getClientById($id)
-    {
-        $Client = Client::find($id);
-        if(is_null($Client)){
-            return response()->json(["message"=>"Client not found"],404);
-        }
-        return response()->json(Client::find($id), 200);
-    }
 
     public function show($id)
     {
-        $Client = Client::find($id);
-        if ($Client) {
-            return response()->json($Client, 200);
-        } else {
-            return response()->json(['error' => 'Client not found'], 404);
+        $client = Client::find($id);
+        if (!$client) {
+            return response()->json(['message' => 'Client not found'], 404);
         }
-    }
 
-    public function index()
-    {
-        $Clients = Client::all();
-        return view('Clients.index', compact('Clients'));
-    }
+        if (!mb_check_encoding($client->logo, 'UTF-8')) {
+            $client->logo = utf8_encode($client->logo);
+        }
 
-    public function insertClient(Request $request)
-    {
-        $Client = Client::create($request->all());
-        return response($Client,201);
+        return response()->json($client);
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:clients',
-            'adresse' => 'nullable|string|max:255',
+{
+    try {
+        $validatedData = $request->validate([
+            'nom'              => 'required|string|max:255',
+            'email'            => 'required|string|email|max:255|unique:clients',
+            'adresse'          => 'nullable|string|max:255',
             'numero_telephone' => 'nullable|string|max:15',
-            'raison_sociale' => 'nullable|string|max:255', // Ajouté
-            'contact' => 'nullable|string|max:255', // Ajouté
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-            $logoPath = $request->file('logo') ? $request->file('logo')->store('clients', 'public') : null;
-
-        $client = new Client();
-        $client->nom = $request->nom;
-        $client->email = $request->email;
-        $client->adresse = $request->adresse;
-        $client->numero_telephone = $request->numero_telephone;
-        $client->raison_sociale = $request->raison_sociale; // Ajouté
-        $client->contact = $request->contact; // Ajouté
-        $client->logo = $request->logo;
-        $client->save();
-        return redirect()->route('Clients.index')->with('success', 'Client created successfully.');
-    }
-
-    public function updateClient(Request $request ,$id)
-    {
-        $Client = Client::find($id);
-        if(is_null($Client))
-        {
-            return response()->json(['error' => 'Client not found'], 404);
-        }
-        $Client->update($request->all());
-        return response($Client,200);
-    }
-
-    public function update(Request $request, Client $Client)
-    {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:clients,email,' . $Client->id,
-            'adresse' => 'nullable|string|max:255',
-            'numero_telephone' => 'nullable|string|max:15',
-            'raison_sociale' => 'nullable|string|max:255', // Ajouté
-            'contact' => 'nullable|string|max:255', // Ajouté
-            'logo' => 'nullable|string|max:255',
+            'raison_sociale'   => 'nullable|string|max:255',
+            'contact'          => 'nullable|string|max:255',
+            'code'             => 'nullable|string|max:50',
+            'logo'             => 'nullable|file|image|max:2048',
         ]);
 
-        $Client->update([
-            'nom' => $request->nom,
-            'email' => $request->email,
-            'adresse' => $request->adresse,
-            'numero_telephone' => $request->numero_telephone,
-            'raison_sociale' => $request->raison_sociale, // Ajouté
-            'contact' => $request->contact, // Ajouté
-            'logo' => $request->logo,
+        \Log::info('Validation réussie', ['data' => $validatedData]);
+
+        $data = $validatedData;
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $path = $file->store('uploads', 'public');
+            \Log::info('Fichier téléchargé', ['path' => $path]);
+            $data['logo'] = $path;
+        }
+
+        $client = Client::create($data);
+        return response()->json($client, 201);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de l\'enregistrement du client : ' . $e->getMessage());
+        return response()->json(['message' => 'Erreur interne du serveur'], 500);
+    }
+}
+
+
+public function update(Request $request, $id)
+{
+    $client = Client::find($id);
+
+    if (!$client) {
+        return response()->json(['error' => 'Client non trouvé'], 404);
+    }
+
+    try {
+        $validatedData = $request->validate([
+            'nom'              => 'required|string|max:255',
+            'email'            => 'required|string|email|max:255|unique:clients,email,' . $client->id,
+            'adresse'          => 'nullable|string|max:255',
+            'numero_telephone' => 'nullable|string|max:15',
+            'raison_sociale'   => 'nullable|string|max:255',
+            'contact'          => 'nullable|string|max:255',
+            'code'             => 'nullable|string|max:50',
+            'logo'             => 'nullable|file|image|max:2048',
         ]);
 
-        return redirect()->route('Clients.index')->with('success', 'Client updated successfully.');
-    }
+        $data = $validatedData;
 
-    public function deleteClient(Client $Client,$id)
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $path = $file->store('uploads', 'public');
+            $data['logo'] = $path;
+        }
+
+        $client->update($data);
+        return response()->json($client, 200);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la mise à jour du client : ' . $e->getMessage());
+        return response()->json(['message' => 'Erreur interne du serveur'], 500);
+    }
+}
+
+
+    public function destroy($id)
     {
-        $Client = Client::find($id);
-        if(is_null($Client))
-        {
+        $client = Client::find($id);
+        if (!$client) {
             return response()->json(['error' => 'Client not found'], 404);
         }
-        $Client->delete();
-        return response(null,204);
+
+        // Supprime le fichier logo s'il existe
+        $logoPath = storage_path('app/public/' . $client->logo);
+        if (file_exists($logoPath)) {
+            unlink($logoPath);
+        }
+
+        $client->delete();
+        return response()->json(['message' => 'Client supprimé avec succès.'], 200);
     }
+
+    public function getImage($id)
+    {
+        $client = Client::findOrFail($id);
+        $path = storage_path('app/public/' . $client->logo);
+
+        if (!file_exists($path)) {
+            return response()->json(['message' => 'Image not found.'], 404);
+        }
+
+        return response()->file($path);
+    }
+
+    public function serveImage($id)
+{
+    $client = Client::find($id);
+
+    if (!$client || !$client->logo) {
+        return response()->json(['message' => 'Image non trouvée'], 404);
+    }
+
+    $path = storage_path('app/public/' . $client->logo);
+
+    // Vérifier si le fichier existe avant de le renvoyer
+    if (!file_exists($path)) {
+        return response()->json(['message' => 'Image non trouvée sur le serveur'], 404);
+    }
+
+    return response()->file($path);
+}
+
 }

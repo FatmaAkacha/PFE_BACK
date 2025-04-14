@@ -9,6 +9,7 @@ use App\Http\Controllers\DevisController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentClassController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SecretController;
 
 
 
@@ -24,14 +25,16 @@ use App\Http\Controllers\CategoryController;
 
 // Routes protégées nécessitant une authentification
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/protected-endpoint', 'SecretController@index');
-
+    Route::get('/protected-endpoint', [SecretController::class, 'index']);
     // Routes Clients
-    Route::get('/clients', [ClientController::class, 'getClients']);
-    Route::get('/clients/{id}', [ClientController::class, 'getClientById']);
-    Route::post('/clients', [ClientController::class, 'insertClient']);
-    Route::put('/clients/{id}', [ClientController::class, 'updateClient']);
-    Route::delete('/clients/{id}', [ClientController::class, 'deleteClient']);
+    Route::get('/clients', [ClientController::class, 'index']);
+    Route::get('/clients/{id}', [ClientController::class, 'show']);
+    Route::post('/clients', [ClientController::class, 'store']);
+    Route::put('/clients/{id}', [ClientController::class, 'update']);
+    Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
+
+    Route::get('/clients/{id}/logo', [ClientController::class, 'getImage']);
+    Route::get('/clients/{id}/serve-logo', [ClientController::class, 'serveImage']);
 
     // Routes Fournisseurs
     Route::get('/fournisseurs', [FournisseurController::class, 'index']);

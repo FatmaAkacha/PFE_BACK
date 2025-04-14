@@ -86,9 +86,8 @@ class ProduitController extends Controller
 
         if ($request->hasFile('image_data')) {
             $file = $request->file('image_data');
-            // Stocke l'image dans le dossier 'uploads' du disk 'public'
             $path = $file->store('uploads', 'public');
-            $data['image_data'] = $path; // juste le chemin
+            $data['image_data'] = $path; 
 
         }
         
