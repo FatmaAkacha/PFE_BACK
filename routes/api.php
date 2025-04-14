@@ -8,6 +8,7 @@ use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentClassController;
+use App\Http\Controllers\CategoryController;
 
 
 
@@ -60,5 +61,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/document-classes', DocumentClassController::class);
 
     Route::get('/devis/{id}/download-pdf', [DevisController::class, 'downloadPDF']);
+
+    // Routes Catégories
+    Route::get('/categories', [CategoryController::class, 'getCategories']);
+    Route::get('/categories/{id}', [CategoryController::class, 'getCategoryById']);
+    Route::post('/categories', [CategoryController::class, 'insertCategory']);
+    Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
+
+
 
 });

@@ -9,8 +9,7 @@ class ProduitController extends Controller
 {
     public function index()
     {
-        $produits = Produit::all();
-    
+        $produits = Produit::with('categorie')->get();
         foreach ($produits as $produit) {
             if (!mb_check_encoding($produit->image_data, 'UTF-8')) {
                 $produit->image_data = utf8_encode($produit->image_data);
@@ -45,7 +44,7 @@ class ProduitController extends Controller
             'quantitystock'  => 'required|integer',
             'seuil'          => 'required|integer',
             'image_data'     => 'nullable|file|image|max:2048',
-            'category'       => 'nullable|string',
+            'categorie_id' => 'required|integer|exists:categories,id',
             'inventoryStatus'=> 'nullable|string',
             'rating'         => 'nullable|numeric',
         ]);
@@ -78,7 +77,7 @@ class ProduitController extends Controller
             'quantitystock'  => 'required|integer',
             'seuil'          => 'required|integer',
             'image_data'     => 'nullable|file|image|max:2048',
-            'category'       => 'nullable|string',
+            'categorie_id' => 'required|integer|exists:categories,id',
             'inventoryStatus'=> 'nullable|string',
             'rating'         => 'nullable|numeric',
         ]);

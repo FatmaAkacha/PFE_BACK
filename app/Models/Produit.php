@@ -16,7 +16,7 @@ class Produit extends Model
         'quantitystock',
         'seuil',
         'image_data',
-        'category',
+        'categorie_id',
         'inventoryStatus',
         'rating',
     ];
@@ -27,4 +27,9 @@ class Produit extends Model
                     ->withPivot('quantite', 'date_achat')
                     ->withTimestamps();
     }
+    public function categorie()
+{
+    return $this->belongsTo(Categorie::class,'categorie_id');
+}
+
 }
