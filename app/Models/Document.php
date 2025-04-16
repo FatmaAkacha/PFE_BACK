@@ -8,7 +8,8 @@ class Document extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['document_class_id', 'codeclassedocument', 'libelle', 'code'];
+    protected $fillable = ['document_class_id', 'codeclassedocument', 'libelle', 'code', 'num_seq'];
+
 
     public function documentClass()
     {
