@@ -10,7 +10,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentClassController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SecretController;
-
+use App\Http\Controllers\LigneDocumentController;
 
 
 /*
@@ -62,6 +62,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::apiResource('/documents', DocumentController::class);
     Route::apiResource('/document-classes', DocumentClassController::class);
+    Route::post('documents-with-lignes', [DocumentController::class, 'storeWithLignes']);
+
 
     Route::get('/devis/{id}/download-pdf', [DevisController::class, 'downloadPDF']);
 
@@ -71,6 +73,18 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/categories', [CategoryController::class, 'insertCategory']);
     Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
     Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
+
+    Route::get('/lignes', [LigneDocumentController::class, 'index']);
+    Route::get('/lignes/document/{documentId}', [LigneDocumentController::class, 'getByDocument']);
+    Route::get('/lignes/{id}', [LigneDocumentController::class, 'show']);
+    Route::post('/lignes', [LigneDocumentController::class, 'store']);
+    Route::put('/lignes/{id}', [LigneDocumentController::class, 'update']);
+    Route::delete('/lignes/{id}', [LigneDocumentController::class, 'destroy']);
+    Route::get('documents/{documentId}/lignes', [LigneDocumentController::class, 'getByDocument']);
+    Route::post('/lignes/batch', [LigneDocumentController::class, 'storeBatch']);
+
+    Route::get('/documents/{id}/print', [DocumentController::class, 'printBonCommande']);
+
 
 
 

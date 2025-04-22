@@ -9878,6 +9878,66 @@
             "install-path": "../tijsverkoyen/css-to-inline-styles"
         },
         {
+            "name": "vizir/laravel-keycloak-web-guard",
+            "version": "v4.1.0",
+            "version_normalized": "4.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mariovalney/laravel-keycloak-web-guard.git",
+                "reference": "a9ac14a26e432a1a61272f20222f3d1b0d999126"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mariovalney/laravel-keycloak-web-guard/zipball/a9ac14a26e432a1a61272f20222f3d1b0d999126",
+                "reference": "a9ac14a26e432a1a61272f20222f3d1b0d999126",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5|^7.0"
+            },
+            "time": "2024-08-05T13:25:33+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "KeycloakWeb": "Vizir\\KeycloakWebGuard\\Facades\\KeycloakWeb"
+                    },
+                    "providers": [
+                        "Vizir\\KeycloakWebGuard\\KeycloakWebGuardServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Vizir\\KeycloakWebGuard\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mário Valney",
+                    "email": "mariovalney@gmail.com"
+                }
+            ],
+            "description": "Simple Keycloak Guard to Laravel Web Routes",
+            "homepage": "https://github.com/Vizir/laravel-keycloak-web-guard",
+            "keywords": [
+                "Authentication",
+                "jwt",
+                "keycloak",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/mariovalney/laravel-keycloak-web-guard/issues",
+                "source": "https://github.com/mariovalney/laravel-keycloak-web-guard/tree/v4.1.0"
+            },
+            "install-path": "../vizir/laravel-keycloak-web-guard"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.1",
             "version_normalized": "5.6.1.0",

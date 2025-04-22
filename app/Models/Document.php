@@ -8,11 +8,29 @@ class Document extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['document_class_id', 'codeclassedocument', 'libelle', 'code', 'num_seq'];
-
+    protected $fillable = [
+        'document_class_id',
+        'codeClasseDoc',
+        'libelle',
+        'code',
+        'num_seq',
+        'etat',
+        'preparateur',
+        'client_id',
+        'devise',
+        'tauxEchange',
+        'dateDocument',
+        'dateLivraison',
+    ];
+    
 
     public function documentClass()
     {
         return $this->belongsTo(DocumentClass::class);
     }
+    public function lignes()
+    {
+        return $this->hasMany(LigneDocument::class);
+    }
+
 }
