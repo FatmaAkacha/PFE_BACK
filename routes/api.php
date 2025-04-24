@@ -83,9 +83,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('documents/{documentId}/lignes', [LigneDocumentController::class, 'getByDocument']);
     Route::post('/lignes/batch', [LigneDocumentController::class, 'storeBatch']);
 
-    Route::get('/documents/{id}/print', [DocumentController::class, 'printBonCommande']);
 
 
 
 
 });
+
+Route::get('/documents/{id}/print', [DocumentController::class, 'printBonCommande']);
+

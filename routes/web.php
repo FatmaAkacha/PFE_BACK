@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,15 +15,17 @@ use App\Http\Controllers\ClientController;
 */
 
 
+
+// Routes protégées par Keycloak
 Route::middleware(['keycloak'])->group(function () {
     Route::get('/', function () {
         return view('welcome');
-        
     });
-// Routes pour afficher les clients (interface web)
-Route::get('/clients', [ClientController::class, 'index'])->name('Clients.index');
-Route::get('/clients/{id}', [ClientController::class, 'show'])->name('Clients.show');
-Route::post('/clients', [ClientController::class, 'store'])->name('Clients.store');
-Route::put('/clients/{id}', [ClientController::class, 'update'])->name('Clients.update');
-Route::delete('/clients/{id}', [ClientController::class, 'deleteClient'])->name('Clients.delete');
+
+    // Routes client
+    Route::get('/clients', [ClientController::class, 'index'])->name('Clients.index');
+    Route::get('/clients/{id}', [ClientController::class, 'show'])->name('Clients.show');
+    Route::post('/clients', [ClientController::class, 'store'])->name('Clients.store');
+    Route::put('/clients/{id}', [ClientController::class, 'update'])->name('Clients.update');
+    Route::delete('/clients/{id}', [ClientController::class, 'deleteClient'])->name('Clients.delete');
 });
