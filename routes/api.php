@@ -9,8 +9,10 @@ use App\Http\Controllers\DevisController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentClassController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\SecretController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LigneDocumentController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 
 /*
@@ -25,7 +27,7 @@ use App\Http\Controllers\LigneDocumentController;
 
 // Routes protégées nécessitant une authentification
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/protected-endpoint', [SecretController::class, 'index']);
+    Route::get('/protected-endpoint', [AuthController::class, 'index']);
     // Routes Clients
     Route::get('/clients', [ClientController::class, 'index']);
     Route::get('/clients/{id}', [ClientController::class, 'show']);
@@ -90,4 +92,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 Route::get('/documents/{id}/print', [DocumentController::class, 'printBonCommande']);
+
+Route::apiResource('users', UserController::class);
+Route::post('/users/by-email', [UserController::class, 'getUserByEmail']);
+Route::get('/users/{id}/roles', [UserController::class, 'getRolesByUserId']);
+
+Route::apiResource('roles', RoleController::class);
+
 

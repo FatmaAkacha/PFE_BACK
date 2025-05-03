@@ -10,9 +10,8 @@ class Document extends Model
 
     protected $fillable = [
         'document_class_id',
-        'codeClasseDoc',
         'libelle',
-        'code',
+        'codeClasseDoc',
         'num_seq',
         'etat',
         'preparateur',

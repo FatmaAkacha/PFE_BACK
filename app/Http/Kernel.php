@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'keycloak' => \Vizir\KeycloakWebGuard\Middleware\KeycloakAuthenticated::class,
+        //'keycloak.sync' => \App\Http\Middleware\SyncKeycloakUser::class,
 
     ];
 }
