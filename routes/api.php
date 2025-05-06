@@ -45,7 +45,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/fournisseurs', [FournisseurController::class, 'store']);
     Route::put('/fournisseurs/{id}', [FournisseurController::class, 'update']);
     Route::delete('/fournisseurs/{id}', [FournisseurController::class, 'destroy']);
-
+    Route::get('/fournisseurs/{id}/logo', [FournisseurController::class, 'getImage']);
+    Route::get('/fournisseurs/{id}/serve-logo', [FournisseurController::class, 'serveImage']);
     // Routes ProduitController
 
     Route::get('/produits', [ProduitController::class, 'index']); // Afficher tous les produits
