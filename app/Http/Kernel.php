@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'keycloak' => \Vizir\KeycloakWebGuard\Middleware\KeycloakAuthenticated::class,
         //'keycloak.sync' => \App\Http\Middleware\SyncKeycloakUser::class,
+        'keycloak.role' => \App\Http\Middleware\CheckKeycloakRole::class,
 
     ];
 }

@@ -18,6 +18,20 @@ class UserController extends Controller
         $user = User::with('roles')->findOrFail($id);
         return response()->json($user);
     }
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|string|unique:users,id',
+            'username' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $user = User::create($validated);
+
+        return response()->json($user, 201);
+    }
+
 
     public function destroy($id)
     {

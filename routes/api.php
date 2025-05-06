@@ -26,6 +26,7 @@ use App\Http\Controllers\RoleController;
 */
 
 // Routes protégées nécessitant une authentification
+// 'keycloak.role:admin'
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/protected-endpoint', [AuthController::class, 'index']);
     // Routes Clients
