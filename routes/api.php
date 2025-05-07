@@ -72,11 +72,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/devis/{id}/download-pdf', [DevisController::class, 'downloadPDF']);
 
     // Routes Catégories
-    Route::get('/categories', [CategoryController::class, 'getCategories']);
-    Route::get('/categories/{id}', [CategoryController::class, 'getCategoryById']);
-    Route::post('/categories', [CategoryController::class, 'insertCategory']);
-    Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
-    Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
+    Route::apiResource('/categories', CategoryController::class);
 
     Route::get('/lignes', [LigneDocumentController::class, 'index']);
     Route::get('/lignes/document/{documentId}', [LigneDocumentController::class, 'getByDocument']);

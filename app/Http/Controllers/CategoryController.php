@@ -7,81 +7,38 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function getCategories()
+    public function index()
     {
         return response()->json(Categorie::all(), 200);
-    }
-
-    public function getCategoryById($id)
-    {
-        $categorie = Categorie::find($id);
-        if (is_null($categorie)) {
-            return response()->json(["message" => "Catégorie non trouvée"], 404);
-        }
-        return response()->json($categorie, 200);
     }
 
     public function show($id)
     {
         $categorie = Categorie::find($id);
-        if ($categorie) {
-            return response()->json($categorie, 200);
-        } else {
-            return response()->json(['error' => 'Catégorie non trouvée'], 404);
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée'], 404);
         }
-    }
-
-    public function index()
-    {
-        $categories = Categorie::all();
-        return view('categories.index', compact('categories'));
-    }
-
-    public function insertCategory(Request $request)
-    {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-
-        $categorie = Categorie::create($request->all());
-        return response($categorie, 201);
+        return response()->json($categorie, 200);
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'nom' => 'required|string|max:255',
-        'description' => 'nullable|string',
-    ]);
-
-    $categorie = new Categorie();
-    $categorie->nom = $request->nom;
-    $categorie->description = $request->description ?? null;
-    $categorie->save();
-
-    return response()->json($categorie, 201);
-}
-
-
-    public function updateCategory(Request $request, $id)
     {
-        $categorie = Categorie::find($id);
-        if (is_null($categorie)) {
-            return response()->json(['error' => 'Catégorie non trouvée'], 404);
-        }
-
         $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        $categorie->update($request->all());
-        return response($categorie, 200);
+        $categorie = Categorie::create($request->only('nom', 'description'));
+        return response()->json($categorie, 201);
     }
 
-    public function update(Request $request, Categorie $categorie)
+    public function update(Request $request, $id)
     {
+        $categorie = Categorie::find($id);
+        if (!$categorie) {
+            return response()->json(['error' => 'Catégorie non trouvée'], 404);
+        }
+
         $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -89,19 +46,20 @@ class CategoryController extends Controller
 
         $categorie->update([
             'nom' => $request->nom,
-            'description' => 'nullable|string',
+            'description' => $request->description,
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Catégorie mise à jour avec succès.');
+        return response()->json($categorie, 200);
     }
 
-    public function deleteCategory($id)
+    public function destroy($id)
     {
         $categorie = Categorie::find($id);
-        if (is_null($categorie)) {
+        if (!$categorie) {
             return response()->json(['error' => 'Catégorie non trouvée'], 404);
         }
+
         $categorie->delete();
-        return response(null, 204);
+        return response()->json(null, 204);
     }
 }
