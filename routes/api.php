@@ -13,6 +13,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LigneDocumentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ContactController;
 
 
 /*
@@ -96,5 +97,7 @@ Route::post('/users/by-email', [UserController::class, 'getUserByEmail']);
 Route::get('/users/{id}/roles', [UserController::class, 'getRolesByUserId']);
 
 Route::apiResource('roles', RoleController::class);
+
+Route::post('/sendemail', [ContactController::class, 'send']);
 
 

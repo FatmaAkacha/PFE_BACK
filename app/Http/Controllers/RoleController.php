@@ -16,7 +16,8 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:roles',
+            'name' => 'required|unique:roles,name',
+            'description' => 'nullable|string',
         ]);
 
         $role = Role::create($validated);
@@ -35,6 +36,7 @@ class RoleController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|unique:roles,name,' . $id,
+            'description' => 'nullable|string',
         ]);
 
         $role->update($validated);
