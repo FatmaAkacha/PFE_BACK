@@ -85,7 +85,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/lignes/batch', [LigneDocumentController::class, 'storeBatch']);
 
 
-
+    Route::post('/sendemail', [ContactController::class, 'send']);
 
 
 });
@@ -98,6 +98,6 @@ Route::get('/users/{id}/roles', [UserController::class, 'getRolesByUserId']);
 
 Route::apiResource('roles', RoleController::class);
 
-Route::post('/sendemail', [ContactController::class, 'send']);
+
 
 
