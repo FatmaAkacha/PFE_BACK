@@ -40,6 +40,7 @@ class ProduitController extends Controller
         $validatedData = $request->validate([
             'nom'              => 'required|string|max:255',
             'description'      => 'required|string',
+            'prix'             => 'required|numeric',
             'prix_achat'       => 'required|numeric',
             'prix_vente_ht'    => 'required|numeric',
             'prix_vente_ttc'   => 'required|numeric',
@@ -79,6 +80,7 @@ class ProduitController extends Controller
         $validatedData = $request->validate([
             'nom'              => 'required|string|max:255',
             'description'      => 'required|string',
+            'prix'             => 'required|numeric',
             'prix_achat'       => 'required|numeric',
             'prix_vente_ht'    => 'required|numeric',
             'prix_vente_ttc'   => 'required|numeric',
