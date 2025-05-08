@@ -19,4 +19,9 @@ class Fournisseur extends Model
             $model->id = (string) Str::uuid();
         });
     }
+    public function produits()
+    {
+        return $this->hasMany(Produit::class);
+    }
+
 }

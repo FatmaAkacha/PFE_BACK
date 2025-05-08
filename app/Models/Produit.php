@@ -12,14 +12,20 @@ class Produit extends Model
     protected $fillable = [
         'nom',
         'description',
-        'prix',
-        'quantite',  
+        'prix_achat',
+        'prix_vente_ht',
+        'prix_vente_ttc',
+        'remise_maximale',
+        'quantitystock',
+        'quantite',
         'seuil',
         'image_data',
         'categorie_id',
+        'fournisseur_id',
         'inventoryStatus',
         'rating',
     ];
+    
 
     /**
      * Relation avec les clients (via la table pivot client_produit)
@@ -63,4 +69,10 @@ class Produit extends Model
             throw new \Exception("Stock insuffisant pour effectuer cette opération.");
         }
     }
+
+    public function fournisseur()
+    {
+        return $this->belongsTo(Fournisseur::class);
+    }
+
 }

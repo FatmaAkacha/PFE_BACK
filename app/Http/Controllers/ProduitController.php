@@ -9,7 +9,7 @@ class ProduitController extends Controller
 {
     public function index()
     {
-        $produits = Produit::with('categorie')->get();
+        $produits = Produit::with('categorie', 'fournisseur')->get();
         foreach ($produits as $produit) {
             if (!mb_check_encoding($produit->image_data, 'UTF-8')) {
                 $produit->image_data = utf8_encode($produit->image_data);
@@ -38,16 +38,22 @@ class ProduitController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nom'            => 'required|string|max:255',
-            'description'    => 'required|string',
-            'prix'           => 'required|numeric',
-            'quantitystock'  => 'required|integer',
-            'seuil'          => 'required|integer',
-            'image_data'     => 'nullable|file|image|max:2048',
-            'categorie_id' => 'required|integer|exists:categories,id',
-            'inventoryStatus'=> 'nullable|string',
-            'rating'         => 'nullable|numeric',
+            'nom'              => 'required|string|max:255',
+            'description'      => 'required|string',
+            'prix_achat'       => 'required|numeric',
+            'prix_vente_ht'    => 'required|numeric',
+            'prix_vente_ttc'   => 'required|numeric',
+            'remise_maximale'  => 'nullable|numeric|min:0|max:100',
+            'quantitystock'    => 'required|integer',
+            'quantite'         => 'required|integer',
+            'seuil'            => 'required|integer',
+            'image_data'       => 'nullable|file|image|max:2048',
+            'categorie_id'     => 'required|integer|exists:categories,id',
+            'fournisseur_id'   => 'required|uuid|exists:fournisseurs,id',
+            'inventoryStatus'  => 'nullable|string',
+            'rating'           => 'nullable|numeric',
         ]);
+        
 
         $data = $validatedData;
         if ($request->hasFile('image_data')) {
@@ -71,16 +77,22 @@ class ProduitController extends Controller
         }
 
         $validatedData = $request->validate([
-            'nom'            => 'required|string|max:255',
-            'description'    => 'required|string',
-            'prix'           => 'required|numeric',
-            'quantitystock'  => 'required|integer',
-            'seuil'          => 'required|integer',
-            'image_data'     => 'nullable|file|image|max:2048',
-            'categorie_id' => 'required|integer|exists:categories,id',
-            'inventoryStatus'=> 'nullable|string',
-            'rating'         => 'nullable|numeric',
+            'nom'              => 'required|string|max:255',
+            'description'      => 'required|string',
+            'prix_achat'       => 'required|numeric',
+            'prix_vente_ht'    => 'required|numeric',
+            'prix_vente_ttc'   => 'required|numeric',
+            'remise_maximale'  => 'nullable|numeric|min:0|max:100',
+            'quantitystock'    => 'required|integer',
+            'quantite'         => 'required|integer',
+            'seuil'            => 'required|integer',
+            'image_data'       => 'nullable|file|image|max:2048',
+            'categorie_id'     => 'required|integer|exists:categories,id',
+            'fournisseur_id'   => 'required|uuid|exists:fournisseurs,id',
+            'inventoryStatus'  => 'nullable|string',
+            'rating'           => 'nullable|numeric',
         ]);
+        
 
         $data = $validatedData;
 
