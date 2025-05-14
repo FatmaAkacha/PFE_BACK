@@ -14,7 +14,7 @@ class Document extends Model
         'codeClasseDoc',
         'num_seq',
         'etat',
-        'preparateur',
+        'preparateur_id',
         'client_id',
         'devise',
         'tauxEchange',
@@ -30,6 +30,10 @@ class Document extends Model
     public function lignes()
     {
         return $this->hasMany(LigneDocument::class);
+    }
+    public function preparateur()
+    {
+        return $this->belongsTo(User::class, 'preparateur_id');
     }
 
 }

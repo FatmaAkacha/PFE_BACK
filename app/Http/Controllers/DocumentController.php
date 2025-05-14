@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class DocumentController extends Controller
 {
@@ -35,7 +36,7 @@ class DocumentController extends Controller
             'document_class_id' => 'required|exists:document_classes,id',
             'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
             'etat' => 'nullable|string',
-            'preparateur' => 'nullable|string',
+            'preparateur_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
             'devise' => 'required|string',
             'tauxEchange' => 'nullable|numeric',
@@ -51,7 +52,7 @@ class DocumentController extends Controller
                 'document_class_id',
                 'libelle',
                 'etat',
-                'preparateur',
+                'preparateur_id',
                 'client_id',
                 'devise',
                 'tauxEchange',
@@ -74,7 +75,7 @@ class DocumentController extends Controller
             'document_class_id' => 'required|exists:document_classes,id',
             'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
             'etat' => 'nullable|string',
-            'preparateur' => 'nullable|string',
+            'preparateur_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
             'devise' => 'required|string',
             'tauxEchange' => 'nullable|numeric',
@@ -95,7 +96,7 @@ class DocumentController extends Controller
             'document_class_id' => $request->document_class_id,
             'libelle' => $request->libelle,
             'etat' => $request->etat,
-            'preparateur' => $request->preparateur,
+            'preparateur_id' => $request->preparateur_id,
             'client_id' => $request->client_id,
             'devise' => $request->devise,
             'tauxEchange' => $request->tauxEchange,
@@ -126,15 +127,22 @@ class DocumentController extends Controller
             'data' => $document
         ], 201);
 
+    } catch (ValidationException $e) {
+        DB::rollBack();
+        return response()->json([
+            'message' => 'Les données fournies sont invalides.',
+            'errors' => $e->errors()
+        ], 422);
     } catch (Exception $e) {
         DB::rollBack();
         Log::error('Erreur lors de la création du document : ' . $e->getMessage());
-
+    
         return response()->json([
             'message' => 'Une erreur est survenue lors de la création du document.',
             'error' => $e->getMessage()
         ], 500);
     }
+    
 }
 
     public function storeWithLignes(Request $request)
@@ -143,7 +151,7 @@ class DocumentController extends Controller
             'document_class_id' => 'required|exists:document_classes,id',
             'libelle' => 'required|string|in:Bon de commande,Bon de livraison,Facture',
             'etat' => 'nullable|string',
-            'preparateur' => 'nullable|string',
+            'preparateur_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
             'devise' => 'required|string',
             'tauxEchange' => 'nullable|numeric',
@@ -168,7 +176,7 @@ class DocumentController extends Controller
             'libelle' => $validated['libelle'],
             'num_seq' => $num_seq,
             'etat' => $validated['etat'] ?? null,
-            'preparateur' => $validated['preparateur'] ?? null,
+            'preparateur_id' => $validated['preparateur_id'] ?? null,
             'client_id' => $validated['client_id'],
             'devise' => $validated['devise'],
             'tauxEchange' => $validated['tauxEchange'] ?? null,
@@ -198,7 +206,7 @@ class DocumentController extends Controller
             'document_class_id' => 'required|exists:document_classes,id',
             'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
             'etat' => 'nullable|string',
-            'preparateur' => 'nullable|string',
+            'preparateur_id' => 'nullable|exists:users,id',
             'client_id' => 'required|exists:clients,id',
             'devise' => 'required|string',
             'tauxEchange' => 'nullable|numeric',
