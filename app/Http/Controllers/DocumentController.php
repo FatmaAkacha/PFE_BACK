@@ -236,4 +236,24 @@ class DocumentController extends Controller
         $pdf = PDF::loadView('documents.print', compact('document'));
         return $pdf->stream('document.pdf');
     }
+
+    public function getDernierCode($classId)
+    {
+        $dernierDocument = Document::where('document_class_id', $classId)
+            ->orderBy('id', 'desc')
+            ->first();
+    
+        if ($dernierDocument) {
+            preg_match('/(\d+)$/', $dernierDocument->code, $matches);
+            $dernierNumero = isset($matches[1]) ? (int)$matches[1] + 1 : 1;
+        } else {
+            $dernierNumero = 1;
+        }
+    
+        $codeFormate = str_pad($dernierNumero, 4, '0', STR_PAD_LEFT);
+    
+        return response()->json($codeFormate);
+    }
+    
+
 }
