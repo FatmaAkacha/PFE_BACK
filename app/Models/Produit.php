@@ -13,6 +13,7 @@ class Produit extends Model
         'nom',
         'description',
         'prix',
+        'tva',
         'prix_achat',
         'prix_vente_ht',
         'prix_vente_ttc',
@@ -24,7 +25,6 @@ class Produit extends Model
         'categorie_id',
         'fournisseur_id',
         'inventoryStatus',
-        'rating',
     ];
     
 

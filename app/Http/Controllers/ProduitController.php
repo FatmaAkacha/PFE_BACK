@@ -42,6 +42,7 @@ class ProduitController extends Controller
             'description'      => 'required|string',
             'prix'             => 'required|numeric',
             'prix_achat'       => 'required|numeric',
+            'tva'              => 'required|numeric',
             'prix_vente_ht'    => 'required|numeric',
             'prix_vente_ttc'   => 'required|numeric',
             'remise_maximale'  => 'nullable|numeric|min:0|max:100',
@@ -52,7 +53,6 @@ class ProduitController extends Controller
             'categorie_id'     => 'required|integer|exists:categories,id',
             'fournisseur_id'   => 'required|uuid|exists:fournisseurs,id',
             'inventoryStatus'  => 'nullable|string',
-            'rating'           => 'nullable|numeric',
         ]);
         
 
@@ -81,6 +81,7 @@ class ProduitController extends Controller
             'nom'              => 'required|string|max:255',
             'description'      => 'required|string',
             'prix'             => 'required|numeric',
+            'tva'              => 'required|numeric',
             'prix_achat'       => 'required|numeric',
             'prix_vente_ht'    => 'required|numeric',
             'prix_vente_ttc'   => 'required|numeric',
@@ -92,7 +93,6 @@ class ProduitController extends Controller
             'categorie_id'     => 'required|integer|exists:categories,id',
             'fournisseur_id'   => 'required|uuid|exists:fournisseurs,id',
             'inventoryStatus'  => 'nullable|string',
-            'rating'           => 'nullable|numeric',
         ]);
         
 

@@ -32,167 +32,251 @@ class DocumentController extends Controller
 
     public function storeOld(Request $request)
     {
-        $request->validate([
-            'document_class_id' => 'required|exists:document_classes,id',
-            'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
-            'etat' => 'nullable|string',
-            'preparateur_id' => 'nullable|exists:users,id',
-            'client_id' => 'required|exists:clients,id',
-            'devise' => 'required|string',
-            'tauxEchange' => 'nullable|numeric',
-            'dateDocument' => 'required|date',
-            'dateLivraison' => 'nullable|date',
-        ]);
+        DB::beginTransaction();
 
-        $lastDocument = Document::where('codeClasseDoc', 'BC')->orderBy('id', 'desc')->first();
-        $num_seq = $lastDocument ? $lastDocument->num_seq + 1 : 1;
+        try {
+            $request->validate([
+                'document_class_id' => 'required|exists:document_classes,id',
+                'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
+                'etat' => 'nullable|string',
+                'preparateur_id' => 'nullable|exists:users,id',
+                'client_id' => 'required|exists:clients,id',
+                'devise' => 'required|string',
+                'tauxEchange' => 'nullable|numeric',
+                'dateDocument' => 'required|date',
+                'dateLivraison' => 'nullable|date',
+                'codeclassedocument' => 'required|string',
+            ]);
 
-        $document = Document::create(array_merge(
-            $request->only([
-                'document_class_id',
-                'libelle',
-                'etat',
-                'preparateur_id',
-                'client_id',
-                'devise',
-                'tauxEchange',
-                'dateDocument',
-                'dateLivraison'
-            ]),
-            ['codeClasseDoc' => 'BC', 'num_seq' => $num_seq]
-        ));
+            $code = $request->input('codeclassedocument');
+           // $lastSeq = Document::where('codeClasseDoc', $code)->max('num_seq');
+           // $num_seq = $lastSeq ? $lastSeq + 1 : 1;
 
-        return response()->json($document, 201);
+            $document = Document::create([
+                'document_class_id' => $request->document_class_id,
+                'libelle' => $request->libelle,
+                'etat' => $request->etat,
+                'preparateur_id' => $request->preparateur_id,
+                'client_id' => $request->client_id,
+                'devise' => $request->devise,
+                'tauxEchange' => $request->tauxEchange,
+                'dateDocument' => Carbon::parse($request->dateDocument),
+                'dateLivraison' => $request->dateLivraison ? Carbon::parse($request->dateLivraison) : null,
+                'codeClasseDoc' => $code,
+                'num_seq' => $num_seq,
+                'numero' => $numero,
+                ]);
+
+            if ($code == 'BC' && $request->has('produitsCommandes')) {
+                foreach ($request->produitsCommandes as $item) {
+                    $produit = Produit::findOrFail($item['produit_id']);
+
+                    if ($produit->quantitystock < $item['quantite']) {
+                        throw new Exception("Stock insuffisant pour le produit ID {$item['produit_id']}");
+                    }
+
+                    $produit->decrement('quantitystock', $item['quantite']);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Document créé avec succès.',
+                'data' => $document
+            ], 201);
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Les données fournies sont invalides.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Erreur lors de la création du document : ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur est survenue.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
     public function store(Request $request)
-{
+    {
+        DB::beginTransaction();
 
-    DB::beginTransaction(); // Démarre une transaction DB
+        try {
+            $request->validate([
+                'document_class_id' => 'required|exists:document_classes,id',
+                'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
+                'etat' => 'nullable|string',
+                'preparateur_id' => 'nullable|exists:users,id',
+                'client_id' => 'required|exists:clients,id',
+                'devise' => 'required|string',
+                'tauxEchange' => 'nullable|numeric',
+                'dateDocument' => 'required|date',
+                'dateLivraison' => 'nullable|date',
+                'codeclassedocument' => 'required|string',
+                'produitsCommandes' => 'array|required|min:1',
+                'produitsCommandes.*.produit_id' => 'required|exists:produits,id',
+                'produitsCommandes.*.quantite' => 'required|numeric|min:1',
+                'produitsCommandes.*.puht' => 'required|numeric|min:0',
+                'produitsCommandes.*.prixTotal' => 'required|numeric|min:0',
+            ]);
 
-    try {
-        // Validation des données
-        $request->validate([
-            'document_class_id' => 'required|exists:document_classes,id',
-            'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
-            'etat' => 'nullable|string',
-            'preparateur_id' => 'nullable|exists:users,id',
-            'client_id' => 'required|exists:clients,id',
-            'devise' => 'required|string',
-            'tauxEchange' => 'nullable|numeric',
-            'dateDocument' => 'required|date',
-            'dateLivraison' => 'nullable|date',
-            'codeclassedocument' => 'required|string',
-        ]);
-        
-        $lastDocument = Document::where('codeClasseDoc', $request->input('codeclassedocument'))->orderBy('id', 'desc')->first();
-        $num_seq = $lastDocument ? $lastDocument->num_seq + 1 : 1;   
+            $code = $request->input('codeclassedocument');
 
-        // Parser les dates
-        $dateDocument = Carbon::parse($request->dateDocument);
-        $dateLivraison = $request->dateLivraison ? Carbon::parse($request->dateLivraison) : null;
+            // 🔢 GÉNÉRATION DU NUMÉRO
+            $dernierDocument = Document::where('codeClasseDoc', $code)->latest()->first();
+            if ($dernierDocument && preg_match('/(\d+)$/', $dernierDocument->numero, $matches)) {
+                $numero = str_pad((int)$matches[1] + 1, 5, '0', STR_PAD_LEFT);
+            } else {
+                $numero = '00001';
+            }
 
-        // Création du document
-        $document = Document::create([
-            'document_class_id' => $request->document_class_id,
-            'libelle' => $request->libelle,
-            'etat' => $request->etat,
-            'preparateur_id' => $request->preparateur_id,
-            'client_id' => $request->client_id,
-            'devise' => $request->devise,
-            'tauxEchange' => $request->tauxEchange,
-            'dateDocument' => $dateDocument,
-            'dateLivraison' => $dateLivraison,
-            'codeClasseDoc' =>  $request->input('codeclassedocument'),
-            'num_seq' => $num_seq,
-        ]);
+            // 🧮 VÉRIFICATION STOCK POUR BC et BL
+            if (in_array($code, ['BC', 'BL'])) {
+                foreach ($request->produitsCommandes as $item) {
+                    $produit = Produit::findOrFail($item['produit_id']);
+                    if ($produit->quantitystock < $item['quantite']) {
+                        throw new \Exception("Stock insuffisant pour le produit ID {$item['produit_id']}");
+                    }
+                }
+            }
 
-        if ( $request->input('codeclassedocument') == 'BC') { 
+            // 📄 CRÉATION DU DOCUMENT
+            $document = Document::create([
+                'document_class_id' => $request->document_class_id,
+                'libelle' => $request->libelle,
+                'etat' => $request->etat,
+                'preparateur_id' => $request->preparateur_id,
+                'client_id' => $request->client_id,
+                'devise' => $request->devise,
+                'tauxEchange' => $request->tauxEchange,
+                'dateDocument' => Carbon::parse($request->dateDocument),
+                'dateLivraison' => $request->dateLivraison ? Carbon::parse($request->dateLivraison) : null,
+                'codeClasseDoc' => $code,
+                'numero' => $numero,
+            ]);
+
+            // ➕ ENREGISTREMENT DES LIGNES
             foreach ($request->produitsCommandes as $item) {
                 $produit = Produit::findOrFail($item['produit_id']);
-    
-                // Empêcher stock négatif (optionnel)
-                if ($produit->quantitystock < $item['quantite']) {
-                    throw new Exception("Stock insuffisant pour le produit ID {$item['produit_id']}");
+
+                LigneDocument::create([
+                    'document_id' => $document->id,
+                    'produit_id' => $produit->id,
+                    'code' => $produit->code ?? null,
+                    'designation' => $produit->designation ?? $produit->nom,
+                    'stock' => $produit->quantitystock,
+                    'quantite' => $item['quantite'],
+                    'puht' => $item['puht'],
+                    'tva' => $item['tva'] ?? 0,
+                    'ttc' => $item['prixTotal'],
+                ]);
+
+                // ➖ DÉCRÉMENTATION DU STOCK
+                if (in_array($code, ['BC', 'BL'])) {
+                    $produit->decrement('quantitystock', $item['quantite']);
                 }
-    
-                $produit->quantitystock -= $item['quantite'];
-                $produit->save();
             }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Document créé avec succès.',
+                'numero' => $numero,
+                'data' => $document->load(['lignesDocument', 'client']),
+            ], 201);
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Les données fournies sont invalides.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erreur lors de la création du document : ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur est survenue.',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTrace(),
+            ], 500);
         }
-
-        DB::commit();
-
-        return response()->json([
-            'message' => 'Document créé avec succès.',
-            'data' => $document
-        ], 201);
-
-    } catch (ValidationException $e) {
-        DB::rollBack();
-        return response()->json([
-            'message' => 'Les données fournies sont invalides.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (Exception $e) {
-        DB::rollBack();
-        Log::error('Erreur lors de la création du document : ' . $e->getMessage());
-    
-        return response()->json([
-            'message' => 'Une erreur est survenue lors de la création du document.',
-            'error' => $e->getMessage()
-        ], 500);
     }
-    
-}
+
+
+
 
     public function storeWithLignes(Request $request)
     {
-        $validated = $request->validate([
-            'document_class_id' => 'required|exists:document_classes,id',
-            'libelle' => 'required|string|in:Bon de commande,Bon de livraison,Facture',
-            'etat' => 'nullable|string',
-            'preparateur_id' => 'nullable|exists:users,id',
-            'client_id' => 'required|exists:clients,id',
-            'devise' => 'required|string',
-            'tauxEchange' => 'nullable|numeric',
-            'dateDocument' => 'required|date',
-            'dateLivraison' => 'nullable|date',
-            'lignes' => 'required|array|min:1',
-            'lignes.*.produit_id' => 'required|exists:produits,id',
-            'lignes.*.designation' => 'required|string',
-            'lignes.*.stock' => 'required|integer',
-            'lignes.*.quantite' => 'required|integer|min:1',
-            'lignes.*.puht' => 'required|numeric',
-            'lignes.*.tva' => 'required|numeric',
-            'lignes.*.ttc' => 'required|numeric',
-        ]);
+        DB::beginTransaction();
 
-        $lastDocument = Document::where('codeClasseDoc', 'BC')->orderBy('id', 'desc')->first();
-        $num_seq = $lastDocument ? $lastDocument->num_seq + 1 : 1;
+        try {
+            $validated = $request->validate([
+                'document_class_id' => 'required|exists:document_classes,id',
+                'libelle' => 'required|string|in:Bon de commande,Bon de livraison,Facture',
+                'etat' => 'nullable|string',
+                'preparateur_id' => 'nullable|exists:users,id',
+                'client_id' => 'required|exists:clients,id',
+                'devise' => 'required|string',
+                'tauxEchange' => 'nullable|numeric',
+                'dateDocument' => 'required|date',
+                'dateLivraison' => 'nullable|date',
+                'lignes' => 'required|array|min:1',
+                'lignes.*.produit_id' => 'required|exists:produits,id',
+                'lignes.*.designation' => 'required|string',
+                'lignes.*.stock' => 'required|integer',
+                'lignes.*.quantite' => 'required|integer|min:1',
+                'lignes.*.puht' => 'required|numeric',
+                'lignes.*.tva' => 'required|numeric',
+                'lignes.*.ttc' => 'required|numeric',
+            ]);
 
-        $document = Document::create([
-            'document_class_id' => $validated['document_class_id'],
-            'codeClasseDoc' => 'BC',
-            'libelle' => $validated['libelle'],
-            'num_seq' => $num_seq,
-            'etat' => $validated['etat'] ?? null,
-            'preparateur_id' => $validated['preparateur_id'] ?? null,
-            'client_id' => $validated['client_id'],
-            'devise' => $validated['devise'],
-            'tauxEchange' => $validated['tauxEchange'] ?? null,
-            'dateDocument' => $validated['dateDocument'],
-            'dateLivraison' => $validated['dateLivraison'] ?? null,
-        ]);
+           // $num_seq = Document::where('codeClasseDoc', 'BC')->max('num_seq') + 1 ?? 1;
 
-        foreach ($validated['lignes'] as $ligneData) {
-            $ligneData['document_id'] = $document->id;
-            LigneDocument::create($ligneData);
+            $document = Document::create([
+                'document_class_id' => $validated['document_class_id'],
+                'codeClasseDoc' => 'BC',
+                'libelle' => $validated['libelle'],
+                'num_seq' => $num_seq,
+                'numero' => 100,
+                'etat' => $validated['etat'] ?? null,
+                'preparateur_id' => $validated['preparateur_id'] ?? null,
+                'client_id' => $validated['client_id'],
+                'devise' => $validated['devise'],
+                'tauxEchange' => $validated['tauxEchange'] ?? null,
+                'dateDocument' => $validated['dateDocument'],
+                'dateLivraison' => $validated['dateLivraison'] ?? null,
+            ]);
 
-            // Mise à jour du stock
-            Produit::where('id', $ligneData['produit_id'])->decrement('quantitystock', $ligneData['quantite']);
+            foreach ($validated['lignes'] as $ligne) {
+                LigneDocument::create(array_merge($ligne, [
+                    'document_id' => $document->id,
+                ]));
+
+                Produit::where('id', $ligne['produit_id'])->decrement('quantitystock', $ligne['quantite']);
+            }
+
+            DB::commit();
+            return response()->json($document->load('lignes.produit'), 201);
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Données invalides.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error("Erreur lors de la création du document avec lignes : " . $e->getMessage());
+            return response()->json([
+                'message' => 'Erreur serveur.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json($document->load('lignes.produit'), 201);
     }
 
     public function update(Request $request, $id)
@@ -215,7 +299,6 @@ class DocumentController extends Controller
         ]);
 
         $document->update($request->all());
-
         return response()->json($document);
     }
 
@@ -237,23 +320,17 @@ class DocumentController extends Controller
         return $pdf->stream('document.pdf');
     }
 
-    public function getDernierCode($classId)
+    public function getDernierCode($codeClasseDoc)
     {
-        $dernierDocument = Document::where('document_class_id', $classId)
-            ->orderBy('id', 'desc')
-            ->first();
-    
+        $dernierDocument = Document::where('codeClasseDoc', 'BC')->latest()->first();
+
         if ($dernierDocument) {
-            preg_match('/(\d+)$/', $dernierDocument->code, $matches);
+            preg_match('/(\d+)$/', $dernierDocument->numero, $matches);
             $dernierNumero = isset($matches[1]) ? (int)$matches[1] + 1 : 1;
         } else {
             $dernierNumero = 1;
         }
-    
-        $codeFormate = str_pad($dernierNumero, 4, '0', STR_PAD_LEFT);
-    
-        return response()->json($codeFormate);
-    }
-    
 
+        return response()->json(str_pad($dernierNumero, 4, '0', STR_PAD_LEFT));
+    }
 }

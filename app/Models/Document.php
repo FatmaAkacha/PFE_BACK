@@ -3,6 +3,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Client;
+
 
 class Document extends Model
 {
@@ -20,6 +22,7 @@ class Document extends Model
         'tauxEchange',
         'dateDocument',
         'dateLivraison',
+        'numero'
     ];
     
 
@@ -27,13 +30,18 @@ class Document extends Model
     {
         return $this->belongsTo(DocumentClass::class);
     }
-    public function lignes()
-    {
-        return $this->hasMany(LigneDocument::class);
-    }
+   public function lignesDocument()
+{
+    return $this->hasMany(LigneDocument::class);
+}
+
     public function preparateur()
     {
         return $this->belongsTo(User::class, 'preparateur_id');
+    }
+     public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_id');
     }
 
 }
