@@ -69,6 +69,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/document-classes', DocumentClassController::class);
     Route::post('documents-with-lignes', [DocumentController::class, 'storeWithLignes']);
     Route::get('/documents/dernier-code/{classId}', [DocumentController::class, 'getDernierCode']);
+    Route::get('/documents/{id}/{codeClasseDoc}', [DocumentController::class, 'getDocumentByIdAndCode']);
+
 
 
     Route::get('/devis/{id}/download-pdf', [DevisController::class, 'downloadPDF']);

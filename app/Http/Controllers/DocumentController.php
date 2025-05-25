@@ -322,7 +322,7 @@ class DocumentController extends Controller
 
     public function getDernierCode($codeClasseDoc)
     {
-        $dernierDocument = Document::where('codeClasseDoc', 'BC')->latest()->first();
+        $dernierDocument = Document::where('codeClasseDoc', $codeClasseDoc)->latest()->first();
 
         if ($dernierDocument) {
             preg_match('/(\d+)$/', $dernierDocument->numero, $matches);
@@ -333,4 +333,19 @@ class DocumentController extends Controller
 
         return response()->json(str_pad($dernierNumero, 4, '0', STR_PAD_LEFT));
     }
+
+    public function getDocumentByIdAndCode($id, $codeClasseDoc)
+{
+    $document = Document::with('client')
+        ->where('id', $id)
+        ->where('codeClasseDoc', $codeClasseDoc)
+        ->first();
+
+    if (!$document) {
+        return response()->json(['message' => 'Document introuvable avec ce code.'], 404);
+    }
+
+    return response()->json($document);
+}
+
 }
