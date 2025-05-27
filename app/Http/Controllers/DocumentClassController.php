@@ -28,7 +28,7 @@ class DocumentClassController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'prefixe' => 'required|string|max:10',
+            'prefix' => 'required|string|max:255',
             'isvent' => 'required|boolean',
             'isachat' => 'required|boolean',
             'actif' => 'required|boolean',
@@ -48,7 +48,7 @@ class DocumentClassController extends Controller
 
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'prefixe' => 'required|string|max:10',
+            'prefix' => 'required|string|max:255',
             'isvent' => 'required|boolean',
             'isachat' => 'required|boolean',
             'actif' => 'required|boolean',

@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail;
+namespace App\Http\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,6 +12,8 @@ class WelcomeAgain extends Mailable
 
     public $subject;
     public $message;
+
+
 
     /**
      * Create a new message instance.

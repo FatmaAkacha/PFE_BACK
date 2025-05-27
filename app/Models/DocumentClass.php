@@ -8,7 +8,7 @@ class DocumentClass extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['libelle', 'prefixe', 'isvent', 'isachat', 'actif'];
+    protected $fillable = ['libelle', 'prefix', 'isvent', 'isachat', 'actif'];
 
     // Une classe de document peut avoir plusieurs documents
     public function documents()
