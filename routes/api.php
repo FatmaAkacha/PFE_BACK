@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/produits/{id}', [ProduitController::class, 'destroy']); // Supprimer un produit
     Route::get('/produits/{id}/image', [ProduitController::class, 'getImage']);
     Route::get('/produits/{id}/image', [ProduitController::class, 'serveImage']);
+    Route::post('/produits/fournisseur/{fournisseur_id}', [ProduitController::class, 'storePourFournisseur']);
 
     
     Route::get('/devis', [DevisController::class, 'index']);

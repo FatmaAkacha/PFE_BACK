@@ -149,5 +149,41 @@ class ProduitController extends Controller
     
         return response()->file($path);
     }
+    public function storePourFournisseur(Request $request, $fournisseur_id)
+{
+    $validatedData = $request->validate([
+        'nom'              => 'required|string|max:255',
+        'description'      => 'required|string',
+        'prix'             => 'required|numeric',
+        'prix_achat'       => 'required|numeric',
+        'tva'              => 'required|numeric',
+        'prix_vente_ht'    => 'required|numeric',
+        'prix_vente_ttc'   => 'required|numeric',
+        'remise_maximale'  => 'nullable|numeric|min:0|max:100',
+        'quantitystock'    => 'required|integer',
+        'quantite'         => 'required|integer',
+        'seuil'            => 'required|integer',
+        'image_data'       => 'nullable|file|image|max:2048',
+        'categorie_id'     => 'required|integer|exists:categories,id',
+        'inventoryStatus'  => 'nullable|string',
+    ]);
+
+    // Ajoute manuellement le fournisseur_id venant de la route
+    $validatedData['fournisseur_id'] = $fournisseur_id;
+
+    if ($request->hasFile('image_data')) {
+        $file = $request->file('image_data');
+        $path = $file->store('uploads', 'public');
+        $validatedData['image_data'] = $path;
+    }
+
+    $produit = Produit::create($validatedData);
+
+    return response()->json([
+        'message' => 'Produit créé pour le fournisseur avec succès.',
+        'produit' => $produit
+    ], 201);
+}
+
     
 }
