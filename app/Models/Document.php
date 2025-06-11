@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
+use App\Models\Magasinier;
 
 
 class Document extends Model
@@ -37,7 +38,7 @@ class Document extends Model
 
     public function preparateur()
     {
-        return $this->belongsTo(User::class, 'preparateur_id');
+        return $this->belongsTo(Magasinier::class, 'preparateur_id');
     }
      public function client()
     {

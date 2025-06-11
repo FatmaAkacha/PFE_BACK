@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\LigneDocument;
 use App\Models\Produit;
+use App\Models\Magasinier;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +24,7 @@ class DocumentController extends Controller
 
     public function show($id)
     {
-        $document = Document::with('lignes.produit')->find($id);
+        $document = Document::with('lignes.produit','magasinier')->find($id);
         if (!$document) {
             return response()->json(['message' => 'Document introuvable'], 404);
         }
@@ -39,7 +40,7 @@ class DocumentController extends Controller
                 'document_class_id' => 'required|exists:document_classes,id',
                 'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
                 'etat' => 'nullable|string',
-                'preparateur_id' => 'nullable|exists:users,id',
+                'preparateur_id' => 'required|exists:magasiniers,id',
                 'client_id' => 'required|exists:clients,id',
                 'devise' => 'required|string',
                 'tauxEchange' => 'nullable|numeric',
@@ -105,13 +106,13 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-
+        $magasinier = Magasinier::findOrFail($request->preparateur_id);
         try {
             $request->validate([
                 'document_class_id' => 'required|exists:document_classes,id',
                 'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
                 'etat' => 'nullable|string',
-                'preparateur_id' => 'nullable|exists:users,id',
+                'preparateur_id' => 'required|exists:magasiniers,id',
                 'client_id' => 'required|exists:clients,id',
                 'devise' => 'required|string',
                 'tauxEchange' => 'nullable|numeric',
@@ -219,7 +220,7 @@ class DocumentController extends Controller
                 'document_class_id' => 'required|exists:document_classes,id',
                 'libelle' => 'required|string|in:Bon de commande,Bon de livraison,Facture',
                 'etat' => 'nullable|string',
-                'preparateur_id' => 'nullable|exists:users,id',
+                'preparateur_id' => 'nullable|exists:magasiniers,id',
                 'client_id' => 'required|exists:clients,id',
                 'devise' => 'required|string',
                 'tauxEchange' => 'nullable|numeric',
@@ -290,7 +291,7 @@ class DocumentController extends Controller
             'document_class_id' => 'required|exists:document_classes,id',
             'libelle' => 'required|in:Bon de commande,Bon de livraison,Facture',
             'etat' => 'nullable|string',
-            'preparateur_id' => 'nullable|exists:users,id',
+            'preparateur_id' => 'required|exists:magasiniers,id',
             'client_id' => 'required|exists:clients,id',
             'devise' => 'required|string',
             'tauxEchange' => 'nullable|numeric',

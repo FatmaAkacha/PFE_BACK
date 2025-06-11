@@ -14,6 +14,7 @@ use App\Http\Controllers\LigneDocumentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\MagasinierController;
 
 
 /*
@@ -90,6 +91,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::post('/sendemail', [ContactController::class, 'send']);
+
+    Route::apiResource('/magasinier', MagasinierController::class);
 
 
 });
