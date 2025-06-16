@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
 use App\Models\Magasinier;
+use App\Models\Fournisseur;
 
 
 class Document extends Model
@@ -23,7 +24,8 @@ class Document extends Model
         'tauxEchange',
         'dateDocument',
         'dateLivraison',
-        'numero'
+        'numero',
+        'fournisseur_id'
     ];
     
 
@@ -43,6 +45,10 @@ class Document extends Model
      public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
+    }
+         public function fournisseur()
+    {
+        return $this->belongsTo(Fournisseur::class, 'fournisseur_id');
     }
 
 }
