@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+      //  \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -37,6 +38,11 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'tenants' => [
+            \Spatie\Multitenancy\Http\Middleware\NeedsTenant::class,
+            \Spatie\Multitenancy\Http\Middleware\EnsureValidTenantSession::class,
         ],
 
         'api' => [
@@ -63,5 +69,9 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'keycloak' => \Vizir\KeycloakWebGuard\Middleware\KeycloakAuthenticated::class,
+        //'keycloak.sync' => \App\Http\Middleware\SyncKeycloakUser::class,
+        'keycloak.role' => \App\Http\Middleware\CheckKeycloakRole::class,
+
     ];
 }
